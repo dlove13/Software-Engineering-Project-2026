@@ -1,6 +1,6 @@
 # Software-Engineering-Project-2026
 
-Compiler project with collaborators:
+Collaborator Contacts:
 
 Landrie Rolla - 785-730-9485 landrierolla@ku.edu
 Christian Mitchell - 316-847-1149 christian.mitchell@ku.edu
