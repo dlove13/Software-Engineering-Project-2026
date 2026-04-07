@@ -8,6 +8,8 @@ Purpose: Fifth Team Meeting, Housekeeping tasks - Shared folders and reformatted
 
 Attendance: Christian, Conner, Davina, Liam, Landrie, Caden
 
+Reviewed Deliverable 3 Feedback
+
 Online deliverable folder shared on SharePoint. Refer to the link in the deliverables channel. Feel free to edit any previous documents/update the GitHub. Just save the docs as a pdf and push to a branch, then merge the branch to main once all conflicts have been resolved.
 
 Deliverable 3 Software Architecture - Define what it is; ask for feedback on the 3-layered/modular approach.
