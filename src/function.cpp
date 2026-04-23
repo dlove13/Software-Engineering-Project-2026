@@ -2,9 +2,12 @@
 
 
 void Display() {
+    
 
     Display_Menu();
+
 }
+
 
 void Display_Menu () {
         
@@ -13,13 +16,18 @@ void Display_Menu () {
         cout << "\n0) Exit Program " << endl;
         cout << "1) Execute Arithmetic Expression Evaluator (Not Implemented)" << endl;
         cout << "2) Run Unit Tests" << endl;
-        cout << "\nEnter 0, 1, or 2 ";
+        cout << "\nEnter 0, 1, or 2: ";
 
 }
 
-int userMenuChoice() {
-    return 0;
-}
+char userMenuChoice() {
+    char inputBuf;
+
+    cin >> inputBuf; 
+    
+    return inputBuf;
+    }
+
 
 //vector<char> Tokenizer () {}
 /*
