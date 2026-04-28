@@ -1,6 +1,7 @@
 #include "function.h"
 
 int main() {
+   /*
     bool Running = true;
 
     while (Running) {
@@ -19,6 +20,7 @@ int main() {
     }
     
     cout << "Exiting program..." << endl;
-
+    */
+    UnitTests();
     return 0;
 }
