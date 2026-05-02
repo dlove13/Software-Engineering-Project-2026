@@ -1,103 +1,162 @@
 #include "function.h"
 
-/*Define unit tests for each individual t*/
+/*  Parser Test
+ *  
+ *  Valid Expression
+ *  Test Expression: (14 + 16 - 12) * 3 / -4 % 6 ** 2
+ *
+ *  Expected: 14 16 + 12 - 3 * -4 / 6 2 ** %
+ *  
+ *  Invalid Expression
+ *  Test Expression : (14 + 16 - 12) * 3 / -4 % 6 ** 2 
+ *
+ *  Expected: ERROR - Unmatched parenthesis
+ *
+ */
 
-//Infix Expression
-vector<char> test_expression_1 = {'3', '+', '4'};
-vector<char> test_expression_2 = {'8' , '-', '(', '5', '-', '2', ')'};
-vector<char> test_expression_3 = {'-','8', '+', '(', '2', '*', '3', ')'};
-vector<char> test_expression_4 = {'4', '*', '(', '3', '+', '2', ')', '%', '7', '-', '1'};
+//Init Expected value
+vector<string> EXPECTED = {"14", "16", "+", "12", "-", "3", "*", "-4", "/", "6", "2","**", "%"};
 
-//Crude Tokenizer
-vector<Token> parser_test_1;
-vector<Token> parser_test_2;
-vector<Token> parser_test_3;
-vector<Token> parser_test_4;
-
-//Expected Output
-vector<char> expected_1 = {'3','4','+'};
-vector<char> expected_2 = {'8','5','2', '-', '-'};
-vector<char> expected_3 = {'-','8', '2', '3', '*', '+'};
-vector<char> expected_4 = {'4','3','2','+','*','7','%', '1', '-'};
-
-
-//Actual output
-vector<char> test_rpn_1;
-vector<char> test_rpn_2;
-vector<char> test_rpn_3;
-vector<char> test_rpn_4;
-
-
-
-vector<Token> CreateTokenList(vector<char> expr)
+//Create test expression
+vector<Token> INIT_PARSER_TEST()
 {
-    vector<Token> tokens;
 
-    for (size_t i = 0; i < expr.size(); i++){
-        Token newToken;
-        newToken.token = expr.at(i);
+//Init Expression vector
+vector<Token> EXPRESSION;
 
-        tokens.push_back(newToken);
-    }
-    
-    return tokens;
+//Init tokens without tokenizer
+Token lparen("(", TokenType::LPAREN);
+Token rparen(")", TokenType::RPAREN);
+
+Token plus("+", 1, 'L', TokenType::OP); 
+Token minus("-", 1, 'L', TokenType::OP);
+Token mult("*", 2, 'L', TokenType::OP);
+Token divide("/", 2, 'L', TokenType::OP);
+Token mod("%", 2, 'L', TokenType::OP);
+Token exponent("**", 3, 'R', TokenType::OP);
+
+Token num_14("14");
+Token num_16("16");
+Token num_12("12");
+Token num_3("3");
+Token num_neg4 ("-4");
+Token num_6("6");
+Token num_2("2");
+Token num_4("4");
+Token num_1("1");
+
+//Add Tokens to vector
+EXPRESSION.push_back(lparen);
+EXPRESSION.push_back(num_14);
+EXPRESSION.push_back(plus);
+EXPRESSION.push_back(num_16);
+EXPRESSION.push_back(minus);
+EXPRESSION.push_back(num_12);
+EXPRESSION.push_back(rparen);
+EXPRESSION.push_back(mult);
+EXPRESSION.push_back(num_3);
+EXPRESSION.push_back(divide);
+EXPRESSION.push_back(num_neg4);
+EXPRESSION.push_back(mod);
+EXPRESSION.push_back(num_6);
+EXPRESSION.push_back(exponent);
+EXPRESSION.push_back(num_2);
+
+return EXPRESSION;
 }
 
+//Helper function to create a vector list of valid tokens
 void PrintTokens(vector<Token> tokenlist)
 {
     //Test Print vector
     for (size_t i = 0; i < tokenlist.size(); i++)
     {
-        cout << tokenlist.at(i).token;
+        cout << tokenlist.at(i).token << " ";
     }
 
     cout << endl;
 }
 
-void PrintRPN(vector<char> parsedExpression)
+//Helper function to print the RPN vector
+void PrintRPN(vector<string> parsedExpression)
 {
 
     for (size_t i = 0; i < parsedExpression.size(); i++)
     {
-        cout << parsedExpression.at(i);
+        cout << parsedExpression.at(i) << " ";
     
     }
 
     cout << endl;
 }
 
-void Result (vector<char> );
-
-void UnitTests ()
+//Helper function to show if the actual output matches the expected
+void Result(ParserResult output, vector<string> expected)
 {
-    //Init list of tokens
-    parser_test_1 = CreateTokenList(test_expression_1);
-    parser_test_2 = CreateTokenList(test_expression_2);
-    parser_test_3 = CreateTokenList(test_expression_3);
-    parser_test_4 = CreateTokenList(test_expression_4);
+   if (output.output == expected)
+   {
+        cout << "PASSED" << endl;
+   }
+
+   else
+   {
+        cout << "Expected: " << endl;
+        PrintRPN(expected);
+
+        cout << "Actual: " << endl;
+        PrintRPN(output.output);
+
+        ErrorHandler(output.error);
+   }
+}
+
+void Result_Error(ParserResult invalid)
+{
+    if (invalid.error != ErrorCode::NONE)
+    { 
+        ErrorHandler(invalid.error);
+        cout << "PASSED" << endl;
+    }
+    else
+    {
+        cout << "no error caught" << endl;
+    }    
+}
+
+void RUN_PARSER_TEST()
+{
+    cout << "RUNNING PARSER UNIT TEST" << endl;
+    cout << "------------------------\n" << endl;
     
-
-    //Print Infix expressions
-    cout << "Infix Expressions" << endl;
-    cout << "-----------------" << endl;
-    PrintTokens(parser_test_1);
-    PrintTokens(parser_test_2);
-    PrintTokens(parser_test_3);
-    PrintTokens(parser_test_4);
+    //Valid Expression
+    cout << "Valid Expression: " << endl;
+    vector<Token> VALID_EXPRESSION = INIT_PARSER_TEST();
+    PrintTokens(VALID_EXPRESSION);
+    cout << endl;
+        
+    ParserResult OUTPUT = Parser(VALID_EXPRESSION);
+    Result(OUTPUT, EXPECTED);
     
-    //Parse expressions
-    test_rpn_1 = Parser(parser_test_1);
-    test_rpn_2 = Parser(parser_test_2);
-    test_rpn_3 = Parser(parser_test_3);
-    test_rpn_4 = Parser(parser_test_4);
+    //Invalid Expression with left parenthesis removed
+    cout << "\nTest Invalid Expression: No matching left parenthesis" << endl;
+    vector<Token> INVALID_EXPRESSION = INIT_PARSER_TEST();
+    INVALID_EXPRESSION.erase(INVALID_EXPRESSION.begin());
+    ParserResult INVALID_OUTPUT = Parser(INVALID_EXPRESSION);
+    
+    Result_Error(INVALID_OUTPUT);
 
+    //Invalid Expression with right parenthesis removed
+    cout << "\nTest Invalid Expression: No matching right parenthesis" << endl;
+    vector<Token> INVALID_EXPRESSION_RIGHT = INIT_PARSER_TEST();
+    INVALID_EXPRESSION_RIGHT.erase(INVALID_EXPRESSION_RIGHT.begin() + 6);
+    ParserResult INVALID_OUTPUT_RIGHT = Parser(INVALID_EXPRESSION_RIGHT);
 
-    //Print RPN expressions
-    cout << "\nRPN Expression" << endl;
-    cout << "--------------" << endl;
-    PrintRPN(test_rpn_1);
-    PrintRPN(test_rpn_2);
-    PrintRPN(test_rpn_3);
-    PrintRPN(test_rpn_4);
+    Result_Error(INVALID_OUTPUT_RIGHT);
+}
+
+//Put all Unit tests here
+void Unit_Tests()
+{
+   RUN_PARSER_TEST();
 }
 

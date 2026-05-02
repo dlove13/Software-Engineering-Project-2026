@@ -1,14 +1,14 @@
 #include "function.h"
 
-
-void Display() {
-
+//Display Functions
+void Display() { 
 
     Display_Menu();
 
+
 }
 
-
+//Main display menu
 void Display_Menu () {
 
     cout << "Display is running..." << endl;
@@ -20,6 +20,7 @@ void Display_Menu () {
 
 }
 
+//Store User Input
 char userMenuChoice() {
     char inputBuf;
 
@@ -28,9 +29,20 @@ char userMenuChoice() {
     return inputBuf;
 }
 
+//Clear terminal helper function
+void clear()
+{
+        #ifdef _WIN32
+           system("cls");
+        #else
+           system("clear");
+        #endif
+}
 
 //vector<char> Tokenizer () {}
-vector<char> Parser (vector<Token> tokenizedInput) {
+
+//Parser Function
+ParserResult Parser (vector<Token> tokenizedInput) {
     /*   Implement with Shunting Yard Algorithm
      *
      *   Numbers -> directly into output queue
@@ -53,50 +65,47 @@ vector<char> Parser (vector<Token> tokenizedInput) {
 
     //Init containers
     stack<Token> operatorStack; 
-    vector<char> postFixExpr;
+    vector<string> postFixExpr;
 
     for (size_t i = 0; i < tokenizedInput.size(); i++)
 
     {
         //Check if number, then push to output
-        if (isdigit(tokenizedInput.at(i).token)) 
+        if (tokenizedInput.at(i).type == TokenType::NUM) 
         {
             postFixExpr.push_back(tokenizedInput.at(i).token);
         }
         //Push left parenthesis onto operator stack
-        else if (tokenizedInput.at(i).token == '(')
+        else if (tokenizedInput.at(i).type == TokenType::LPAREN)
         {
             operatorStack.push(tokenizedInput.at(i));
         }
         //Pop operators from stack and add to output until next left parenthesis
-        else if (tokenizedInput.at(i).token == ')')
+        else if (tokenizedInput.at(i).type == TokenType::RPAREN)
         {
-            while (!operatorStack.empty() && operatorStack.top().token != '(')
+            while (!operatorStack.empty() && operatorStack.top().type != TokenType:: LPAREN)
             {
                 postFixExpr.push_back(operatorStack.top().token);
                 operatorStack.pop();
             }
 
-            if (!operatorStack.empty()) 
+            if (!operatorStack.empty() && operatorStack.top().type == TokenType::LPAREN)
             {
-                operatorStack.pop();
+            
+                operatorStack.pop();        //discard matching left parenthesis
             } 
             else 
             {
-                //Error-Handling: Mismatched Parenthesis
+               //Error-Handling: Mismatched Parenthesis
+                return {postFixExpr, ErrorCode::MISMATCHED_PARENTHESIS}; 
             }
-
-            //Pop remaining parenthesis
         }
+            //Pop remaining parenthesis
 
-        else if (tokenizedInput.at(i).token == '+' ||
-                tokenizedInput.at(i).token == '-' ||      
-                tokenizedInput.at(i).token == '/' ||
-                tokenizedInput.at(i).token == '*' 
-                )
+        else if (tokenizedInput.at(i).type == TokenType::OP)
         {
             while (!operatorStack.empty() &&
-                    operatorStack.top().token != '(' &&
+                    operatorStack.top().type != TokenType::LPAREN &&
                     operatorStack.top().precedence >= tokenizedInput.at(i).precedence &&
                     tokenizedInput.at(i).associativity == 'L')
             {
@@ -110,30 +119,32 @@ vector<char> Parser (vector<Token> tokenizedInput) {
     //Empty out remaining operators
     while (!operatorStack.empty())
     {
-        try {
-
-            if (operatorStack.top().token == '(')
-            {
-                //Error_Handler: Mismatched Parenthesis
-                throw runtime_error("Mismatched parenthesis.");
-            }
-        }
-
-        catch (const runtime_error& e)
+        //Error-Handling: Mismatched Parenthesis
+        if (operatorStack.top().type == TokenType::LPAREN)
         {
-            cerr << "Error: " << e.what() << endl;
+            return {{}, ErrorCode::MISMATCHED_PARENTHESIS};
         }
-
 
         postFixExpr.push_back(operatorStack.top().token);
         operatorStack.pop();
     }
 
-    return postFixExpr;
+    return {postFixExpr, ErrorCode::NONE};
 }
 
 //   vector<char> Evaluator () {}
 
-// int Error_Handler () {}
-
+//TODO add more error messages
+void ErrorHandler(ErrorCode error)
+{
+   switch(error)
+   {
+        case ErrorCode::MISMATCHED_PARENTHESIS:
+            cout << "Error: Mismatched parenthesis. " << endl;
+            break;
+        //No error
+        default:
+            break;
+   }
+}
 
