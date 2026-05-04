@@ -23,11 +23,12 @@ enum class TokenType { NUM, OP, LPAREN, RPAREN };
 enum class ErrorCode
 {
    NONE,
-   MISMATCHED_PARENTHESIS
+   MISMATCHED_PARENTHESIS,
+   DIVIDE_BY_ZERO,
+   INVALID_SYNTAX
 };
 
 void ErrorHandler(ErrorCode error);
-
 
 
 //Define token class
@@ -39,6 +40,14 @@ class Token {
         char associativity;
         TokenType type;
         
+        //== overload to check if two tokens are equal
+        bool operator==(const Token& other) const
+        {
+           return token == other.token &&
+                  precedence == other.precedence &&
+                  associativity == other.associativity &&
+                  type == other.type;
+        }
         //default constructor for numbers
         Token(string n) 
         {
@@ -72,7 +81,7 @@ class Token {
 //Store result of parser and potential error code
 struct ParserResult
 {
-    vector<string> output;
+    vector<Token> output;
     ErrorCode error = ErrorCode::NONE;
 };
 

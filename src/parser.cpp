@@ -1,45 +1,5 @@
 #include "function.h"
 
-//Display Functions
-void Display() { 
-
-    Display_Menu();
-
-
-}
-
-//Main display menu
-void Display_Menu () {
-
-    cout << "Display is running..." << endl;
-
-    cout << "\n0) Exit Program " << endl;
-    cout << "1) Execute Arithmetic Expression Evaluator (Not Implemented)" << endl;
-    cout << "2) Run Unit Tests" << endl;
-    cout << "\nEnter 0, 1, or 2: ";
-
-}
-
-//Store User Input
-char userMenuChoice() {
-    char inputBuf;
-
-    cin >> inputBuf; 
-
-    return inputBuf;
-}
-
-//Clear terminal helper function
-void clear()
-{
-        #ifdef _WIN32
-           system("cls");
-        #else
-           system("clear");
-        #endif
-}
-
-//vector<char> Tokenizer () {}
 
 //Parser Function
 ParserResult Parser (vector<Token> tokenizedInput) {
@@ -65,7 +25,7 @@ ParserResult Parser (vector<Token> tokenizedInput) {
 
     //Init containers
     stack<Token> operatorStack; 
-    vector<string> postFixExpr;
+    vector<Token> postFixExpr;
 
     for (size_t i = 0; i < tokenizedInput.size(); i++)
 
@@ -73,7 +33,7 @@ ParserResult Parser (vector<Token> tokenizedInput) {
         //Check if number, then push to output
         if (tokenizedInput.at(i).type == TokenType::NUM) 
         {
-            postFixExpr.push_back(tokenizedInput.at(i).token);
+            postFixExpr.push_back(tokenizedInput.at(i));
         }
         //Push left parenthesis onto operator stack
         else if (tokenizedInput.at(i).type == TokenType::LPAREN)
@@ -85,7 +45,7 @@ ParserResult Parser (vector<Token> tokenizedInput) {
         {
             while (!operatorStack.empty() && operatorStack.top().type != TokenType:: LPAREN)
             {
-                postFixExpr.push_back(operatorStack.top().token);
+                postFixExpr.push_back(operatorStack.top());
                 operatorStack.pop();
             }
 
@@ -109,7 +69,7 @@ ParserResult Parser (vector<Token> tokenizedInput) {
                     operatorStack.top().precedence >= tokenizedInput.at(i).precedence &&
                     tokenizedInput.at(i).associativity == 'L')
             {
-                postFixExpr.push_back(operatorStack.top().token);
+                postFixExpr.push_back(operatorStack.top());
                 operatorStack.pop();
             }
             operatorStack.push(tokenizedInput.at(i));
@@ -125,26 +85,11 @@ ParserResult Parser (vector<Token> tokenizedInput) {
             return {{}, ErrorCode::MISMATCHED_PARENTHESIS};
         }
 
-        postFixExpr.push_back(operatorStack.top().token);
+        postFixExpr.push_back(operatorStack.top());
         operatorStack.pop();
     }
 
     return {postFixExpr, ErrorCode::NONE};
 }
 
-//   vector<char> Evaluator () {}
-
-//TODO add more error messages
-void ErrorHandler(ErrorCode error)
-{
-   switch(error)
-   {
-        case ErrorCode::MISMATCHED_PARENTHESIS:
-            cout << "Error: Mismatched parenthesis. " << endl;
-            break;
-        //No error
-        default:
-            break;
-   }
-}
 

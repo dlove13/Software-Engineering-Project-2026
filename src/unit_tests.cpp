@@ -14,26 +14,16 @@
  *
  */
 
-//Init Expected value
-vector<string> EXPECTED = {"14", "16", "+", "12", "-", "3", "*", "-4", "/", "6", "2","**", "%"};
-
-//Create test expression
-vector<Token> INIT_PARSER_TEST()
-{
-
-//Init Expression vector
-vector<Token> EXPRESSION;
-
 //Init tokens without tokenizer
 Token lparen("(", TokenType::LPAREN);
 Token rparen(")", TokenType::RPAREN);
 
-Token plus("+", 1, 'L', TokenType::OP); 
-Token minus("-", 1, 'L', TokenType::OP);
-Token mult("*", 2, 'L', TokenType::OP);
-Token divide("/", 2, 'L', TokenType::OP);
-Token mod("%", 2, 'L', TokenType::OP);
-Token exponent("**", 3, 'R', TokenType::OP);
+Token opPlus("+", 1, 'L', TokenType::OP); 
+Token opMinus("-", 1, 'L', TokenType::OP);
+Token opMult("*", 2, 'L', TokenType::OP);
+Token opDivide("/", 2, 'L', TokenType::OP);
+Token opMod("%", 2, 'L', TokenType::OP);
+Token opExponent("**", 3, 'R', TokenType::OP);
 
 Token num_14("14");
 Token num_16("16");
@@ -45,21 +35,31 @@ Token num_2("2");
 Token num_4("4");
 Token num_1("1");
 
+//Init Expected value
+ vector<Token> EXPECTED = {num_14, num_16, opPlus, num_12,opMinus, num_3, opMult, num_neg4,
+                           opDivide, num_6, num_2, opExponent, opMod}; 
+
+//Create test expression
+vector<Token> INIT_PARSER_TEST()
+{
+      
+//Init Expression vector
+vector<Token> EXPRESSION;
 //Add Tokens to vector
 EXPRESSION.push_back(lparen);
 EXPRESSION.push_back(num_14);
-EXPRESSION.push_back(plus);
+EXPRESSION.push_back(opPlus);
 EXPRESSION.push_back(num_16);
-EXPRESSION.push_back(minus);
+EXPRESSION.push_back(opMinus);
 EXPRESSION.push_back(num_12);
 EXPRESSION.push_back(rparen);
-EXPRESSION.push_back(mult);
+EXPRESSION.push_back(opMult);
 EXPRESSION.push_back(num_3);
-EXPRESSION.push_back(divide);
+EXPRESSION.push_back(opDivide);
 EXPRESSION.push_back(num_neg4);
-EXPRESSION.push_back(mod);
+EXPRESSION.push_back(opMod);
 EXPRESSION.push_back(num_6);
-EXPRESSION.push_back(exponent);
+EXPRESSION.push_back(opExponent);
 EXPRESSION.push_back(num_2);
 
 return EXPRESSION;
@@ -78,12 +78,12 @@ void PrintTokens(vector<Token> tokenlist)
 }
 
 //Helper function to print the RPN vector
-void PrintRPN(vector<string> parsedExpression)
+void PrintRPN(vector<Token> parsedExpression)
 {
 
     for (size_t i = 0; i < parsedExpression.size(); i++)
     {
-        cout << parsedExpression.at(i) << " ";
+        cout << parsedExpression.at(i).token << " ";
     
     }
 
@@ -91,7 +91,7 @@ void PrintRPN(vector<string> parsedExpression)
 }
 
 //Helper function to show if the actual output matches the expected
-void Result(ParserResult output, vector<string> expected)
+void Result(ParserResult output, vector<Token> expected)
 {
    if (output.output == expected)
    {
