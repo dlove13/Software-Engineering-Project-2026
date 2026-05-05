@@ -15,7 +15,13 @@ void ErrorHandler(ErrorCode error)
 
         case ErrorCode::INVALID_SYNTAX:
             cout << "Error: Invalid syntax." << endl;
-       
+            break;      
+        case ErrorCode::ADJACENT_OPERATORS:
+            cout << "Error: Adjacent operators detected." << endl;
+            break;
+        case ErrorCode::INVALID_EXPRESSION:
+            cout << "Error: Invalid Expression." << endl;
+            break;
         //No error
         default:
             break;
