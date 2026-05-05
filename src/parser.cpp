@@ -38,11 +38,22 @@ ParserResult Parser (vector<Token> tokenizedInput) {
         //Push left parenthesis onto operator stack
         else if (tokenizedInput.at(i).type == TokenType::LPAREN)
         {
+            //Check if there is an operator after an opening parenthesis
+            if (tokenizedInput.at(i + 1).type == TokenType::OP)
+            {
+                return {{}, ErrorCode::INVALID_SYNTAX};
+            }
+
             operatorStack.push(tokenizedInput.at(i));
         }
         //Pop operators from stack and add to output until next left parenthesis
         else if (tokenizedInput.at(i).type == TokenType::RPAREN)
         {
+            //Check if there is an operator before a closing parenthesis
+            if (i > 0 && tokenizedInput.at(i - 1).type == TokenType::OP)
+            {
+                return {{}, ErrorCode::INVALID_SYNTAX};
+            }
             while (!operatorStack.empty() && operatorStack.top().type != TokenType:: LPAREN)
             {
                 postFixExpr.push_back(operatorStack.top());
@@ -57,7 +68,7 @@ ParserResult Parser (vector<Token> tokenizedInput) {
             else 
             {
                //Error-Handling: Mismatched Parenthesis
-                return {postFixExpr, ErrorCode::MISMATCHED_PARENTHESIS}; 
+                return {{}, ErrorCode::MISMATCHED_PARENTHESIS}; 
             }
         }
             //Pop remaining parenthesis
