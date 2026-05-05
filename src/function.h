@@ -25,7 +25,10 @@ enum class ErrorCode
    NONE,
    MISMATCHED_PARENTHESIS,
    DIVIDE_BY_ZERO,
-   INVALID_SYNTAX
+   INVALID_SYNTAX,
+   ADJACENT_OPERATORS,
+   INVALID_EXPRESSION
+
 };
 
 void ErrorHandler(ErrorCode error);
