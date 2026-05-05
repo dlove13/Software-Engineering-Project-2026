@@ -8,10 +8,19 @@
  *  Expected: 14 16 + 12 - 3 * -4 / 6 2 ** %
  *  
  *  Invalid Expression
- *  Test Expression : (14 + 16 - 12) * 3 / -4 % 6 ** 2 
+ *  Test Expression : 14 + 16 - 12) * 3 / -4 % 6 ** 2 
  *
  *  Expected: ERROR - Unmatched parenthesis
  *
+ *  Invalid Expression
+ *  Test Expression : (14 + 16 - 12 * 3 / -4 % 6 ** 2 
+ *
+ *  Expected: ERROR - Unmatched parenthesis
+ *
+ *  Invalid Expression
+ *  Test Expression : (14 ++ 3)
+    
+    Expected: ERROR - Operator Adjacent
  */
 
 //Init tokens without tokenizer
@@ -39,6 +48,7 @@ Token num_1("1");
  vector<Token> EXPECTED = {num_14, num_16, opPlus, num_12,opMinus, num_3, opMult, num_neg4,
                            opDivide, num_6, num_2, opExponent, opMod}; 
 
+ vector<Token> OPERATOR_TEST = {num_14, opPlus, opPlus, num_3};
 //Create test expression
 vector<Token> INIT_PARSER_TEST()
 {
@@ -141,6 +151,7 @@ void RUN_PARSER_TEST()
     cout << "\nTest Invalid Expression: No matching left parenthesis" << endl;
     vector<Token> INVALID_EXPRESSION = INIT_PARSER_TEST();
     INVALID_EXPRESSION.erase(INVALID_EXPRESSION.begin());
+    PrintTokens(INVALID_EXPRESSION);
     ParserResult INVALID_OUTPUT = Parser(INVALID_EXPRESSION);
     
     Result_Error(INVALID_OUTPUT);
@@ -149,9 +160,19 @@ void RUN_PARSER_TEST()
     cout << "\nTest Invalid Expression: No matching right parenthesis" << endl;
     vector<Token> INVALID_EXPRESSION_RIGHT = INIT_PARSER_TEST();
     INVALID_EXPRESSION_RIGHT.erase(INVALID_EXPRESSION_RIGHT.begin() + 6);
+    PrintTokens(INVALID_EXPRESSION_RIGHT);
     ParserResult INVALID_OUTPUT_RIGHT = Parser(INVALID_EXPRESSION_RIGHT);
 
     Result_Error(INVALID_OUTPUT_RIGHT);
+    
+    //Operators adjacent to each other
+    cout << "\nTest Invalid Expression: Operators adjacent." << endl;
+    PrintTokens(OPERATOR_TEST);
+    ParserResult INVALID_OUTPUT_OP = Parser(OPERATOR_TEST);
+
+    Result_Error(INVALID_OUTPUT_OP);
+
+
 }
 
 //Put all Unit tests here

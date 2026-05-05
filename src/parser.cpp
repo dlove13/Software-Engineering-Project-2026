@@ -64,6 +64,18 @@ ParserResult Parser (vector<Token> tokenizedInput) {
 
         else if (tokenizedInput.at(i).type == TokenType::OP)
         {
+            //Check for adjacent operators
+            if (i > 0 && tokenizedInput.at(i - 1).type == TokenType::OP)
+            {
+                return {{}, ErrorCode::ADJACENT_OPERATORS};
+            }
+
+            //Check for operator at the start of expression
+            if (i == 0)
+            {
+                return {{}, ErrorCode::INVALID_EXPRESSION};
+            }
+
             while (!operatorStack.empty() &&
                     operatorStack.top().type != TokenType::LPAREN &&
                     operatorStack.top().precedence >= tokenizedInput.at(i).precedence &&
