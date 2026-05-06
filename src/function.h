@@ -8,6 +8,7 @@
 #include <cctype>
 #include <stack>
 #include <stdexcept>
+#include <cmath>
 using namespace std;
 
 //Display Functions
