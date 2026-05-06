@@ -98,6 +98,15 @@ ParserResult Parser( vector<Token> tokenizedInput);
 
 //int Evalutor();             //TODO
 
+//Store result of evaluator and potential error code
+struct EvaluatorResult
+{
+   double output = 0.0;
+   ErrorCode error = ErrorCode::NONE;
+};
+
+EvaluatorResult Evaluator(ParserResult parserOutput);
+
 void Unit_Tests();            //TODO
 
 #endif
