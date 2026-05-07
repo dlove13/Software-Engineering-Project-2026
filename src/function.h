@@ -80,7 +80,7 @@ class Token {
         }
 };
 
-//vector<char> Tokenizer();   //TODO
+vector<Token> Tokenizer(string input);   //TODO
 
 //Store result of parser and potential error code
 struct ParserResult
