@@ -43,6 +43,7 @@ Token num_6("6");
 Token num_2("2");
 Token num_4("4");
 Token num_1("1");
+Token num_0("0");
 
 //Valid Test Case
 vector<Token> VALID_EXPRESSION = {lparen, num_14, opPlus, num_16, opMinus, num_12, rparen, opMult, num_3, opDivide, num_neg4,
@@ -57,6 +58,10 @@ vector<Token> NO_CLOSING_PAREN = {lparen, num_3, opMinus, num_2};   //No matchin
 vector<Token> OPERATOR_TEST = {num_14, opPlus, opPlus, num_3};      //Adjacent operators 14 + + 3
 vector<Token> OPERATOR_TEST_2 = {lparen, opDivide, num_1};          //Operator after opening parenthesis ( / 1
 vector<Token> OPERATOR_TEST_3 = {lparen, num_12,opPlus,rparen};     //Operator before closing parenthesis ( 12 + )
+
+// Evaluator Test Inputs
+vector<Token> SIMPLE_DIV = {num_6, num_3, opDivide}; //Division 6 / 3 = 2
+vector<Token> DIV_BY_ZERO = {num_6, num_0, opDivide}; //Divide by zero 6 / 0
 
 
 //Helper function to print token list
@@ -105,6 +110,44 @@ void Result_Error(ParserResult invalid)
     }    
 }
 
+//Helper function to show if the actual result matches the expected
+void Result_Evaluator(EvaluatorResult result, double expected)
+{
+    if (result.error != ErrorCode::NONE)
+    {
+        ErrorHandler(result.error);
+        cout << "FAILED" << endl;
+    }
+
+    else if (result.result == expected)
+    {
+        cout << "PASSED" << endl;
+    }
+
+    else 
+    {
+        cout << "Expected: " << expected << endl;
+        cout << "Actual: " << result.result << endl;
+        cout << "FAILED" << endl;
+        
+    }
+}
+
+//Helper function to ensure the correct error was caught
+void Result_Evaluator_Error(EvaluatorResult result, ErrorCode expected)
+{
+    if (result.error == expected)
+    {
+        ErrorHandler(result.error);
+        cout << "PASSED" << endl;
+    }
+    else
+    {
+        cout << "No error caught" << endl;
+        cout << "FAILED" << endl;
+    }
+}
+
 void RUN_PARSER_TEST()
 {
     cout << "RUNNING PARSER UNIT TEST" << endl;
@@ -137,10 +180,31 @@ void RUN_PARSER_TEST()
     cout << "-----END PARSER TEST-----\n" << endl;
 }
 
+void RUN_EVALUATOR_TEST()
+{
+    cout << "RUNNING EVALUATOR UNIT TEST" << endl;
+    cout << "------------------------\n" << endl;
+    
+    cout << "Valid Expression Test" << endl;
+    EvaluatorResult VALID_EVAL = Evaluator(Parser(VALID_EXPRESSION));
+    Result_Evaluator(VALID_EVAL, -13.5);
+
+    cout << "\nSimple Division Test: 6 / 3 = 2." << endl;
+    EvaluatorResult EVAL_DIV = Evaluator({SIMPLE_DIV, ErrorCode::NONE});
+    Result_Evaluator(EVAL_DIV, 2.0);
+
+    cout << "\nError Test: Divide by zero." << endl;
+    EvaluatorResult EVAL_ZERO = Evaluator({DIV_BY_ZERO, ErrorCode::NONE});
+    Result_Evaluator_Error(EVAL_ZERO, ErrorCode::DIVIDE_BY_ZERO);
+
+    cout << "-----END EVALUATOR TEST-----\n" << endl;
+}
+
 //Put all Unit tests here
 void Unit_Tests()
 {
    RUN_PARSER_TEST();
-  
+   RUN_EVALUATOR_TEST();
+
 }
 
