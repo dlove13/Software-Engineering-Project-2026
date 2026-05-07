@@ -79,6 +79,7 @@ void Display() {
 
         }
         else if (choice == '2') {
+            clear();
             cout << "\nRunning unit tests...\n";
             Unit_Tests();   // make sure this exists
         }

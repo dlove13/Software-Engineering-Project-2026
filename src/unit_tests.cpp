@@ -206,37 +206,37 @@ void RUN_TOKENIZER_TEST()
     cout << "---------------------------\n" << endl;
  
     Token t_num("42");
-    cout << "Numeric token — token: " << t_num.token << ", prec: " << t_num.precedence << ", assoc: " << t_num.associativity << endl;
+    cout << "Numeric token -> token: " << t_num.token << ", prec: " << t_num.precedence << ", assoc: " << t_num.associativity << endl;
     cout << (t_num.token == "42" && t_num.precedence == 0 && t_num.associativity == ' ' && t_num.type == TokenType::NUM ? "PASSED" : "FAILED") << endl;
  
 
     
-    cout << "\nNegative number token — token: " << endl;
+    cout << "\nNegative number token -> token: " << endl;
     Token t_neg("-7");
     cout << (t_neg.token == "-7" && t_neg.type == TokenType::NUM ? "PASSED" : "FAILED") << endl;
  
-    cout << "\nOperator token — token: " << endl;
+    cout << "\nOperator token -> token: " << endl;
     Token t_op("**", 3, 'R', TokenType::OP);
     cout << (t_op.token == "**" && t_op.precedence == 3 && t_op.associativity == 'R' && t_op.type == TokenType::OP ? "PASSED" : "FAILED") << endl;
  
-    cout << "\nLeft parenthesis token — token: " << endl;
+    cout << "\nLeft parenthesis token -> token: " << endl;
     Token t_lp("(", TokenType::LPAREN);
     cout << (t_lp.token == "(" && t_lp.type == TokenType::LPAREN ? "PASSED" : "FAILED") << endl;
  
 
-    cout << "\nRight parenthesis token — token: " << endl;
+    cout << "\nRight parenthesis token -> token: " << endl;
     Token t_rp(")", TokenType::RPAREN);
     cout << (t_rp.token == ")" && t_rp.type == TokenType::RPAREN ? "PASSED" : "FAILED") << endl;
  
 
 
-    cout << "\nToken equality — same tokens: " << endl;
+    cout << "\nToken equality -> same tokens: " << endl;
     Token t_a("+", 1, 'L', TokenType::OP);
     Token t_b("+", 1, 'L', TokenType::OP);
     cout << (t_a == t_b ? "PASSED" : "FAILED") << endl;
  
 
-    cout << "\nToken equality — different tokens: " << endl;
+    cout << "\nToken equality -> different tokens: " << endl;
     Token t_c("-", 1, 'L', TokenType::OP);
     cout << (!(t_a == t_c) ? "PASSED" : "FAILED") << endl;
  
@@ -246,9 +246,10 @@ void RUN_TOKENIZER_TEST()
 //Put all Unit tests here
 void Unit_Tests()
 {
+   RUN_TOKENIZER_TEST();
    RUN_PARSER_TEST();
    RUN_EVALUATOR_TEST();
-   RUN_TOKENIZER_TEST();
+
 
 }
 
