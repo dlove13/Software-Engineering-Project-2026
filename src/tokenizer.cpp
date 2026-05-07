@@ -22,14 +22,14 @@ vector<Token> Tokenizer (string input) {
                         }
                         doubledot = true;
                     }
-                
+
                     numStr += input[i];
                     i++;
                 }
 
-            i--; // Step back to re-evaluate the last character
-            tokens.push_back(Token(numStr));
-            continue;
+                i--; // Step back to re-evaluate the last character
+                tokens.push_back(Token(numStr));
+                continue;
             }  
 
             if (c == '*' && i + 1 < input.size() && input[i + 1] == '*') {// check for exponent operator
@@ -42,7 +42,7 @@ vector<Token> Tokenizer (string input) {
                 tokens.push_back(Token(string(1, c), 2, 'L',TokenType::OP));
                 continue;
             } 
-            
+
             if (c == '(') { // left parentheses
                 tokens.push_back(Token(string(1, c),TokenType::LPAREN));
                 continue;
@@ -54,28 +54,53 @@ vector<Token> Tokenizer (string input) {
             } 
 
             if (c == '-') {
-                
+
                 //check for the three valid unary - cases
                 bool valid = tokens.empty() || 
-                             tokens.back().type == TokenType::OP || 
-                             tokens.back().type == TokenType::LPAREN;
+                    tokens.back().type == TokenType::OP || 
+                    tokens.back().type == TokenType::LPAREN;
 
                 if (valid) {
-                    tokens.push_back(Token("u-", 4, 'R',TokenType::OP)); // USING "u-" to represent unary minus
+                    string numStr = "-";
+                    i++;
 
+                    //skip whitespace
+                    while (i < input.size() && input[i] == ' ') i++;
+
+                    if (i < input.size() && (isdigit(input[i]) || input[i] == '.')) {
+                        bool doubledot = false;
+                        while (i < input.size() && (isdigit(input[i]) || input[i] == '.')) {
+                            if (input[i] == '.') {
+                                if (doubledot) {
+                                    ErrorHandler(ErrorCode::INVALID_SYNTAX);
+                                    break;
+                                }
+                                doubledot = true;
+                            }
+                            numStr += input[i];
+                            i++;
+                        }
+                        i--; // Step back to re-evaluate the last character
+                        tokens.push_back(Token(numStr)); // e.g. "-3.14" as a NUM token
+                    } else {
+                        // '-' was not followed by a number — invalid
+                        ErrorHandler(ErrorCode::INVALID_SYNTAX);
+                        break;
+                    }
                 } else {
-                    tokens.push_back(Token(string(1, c), 1, 'L',TokenType::OP));
+                    tokens.push_back(Token(string(1, c), 1, 'L', TokenType::OP));
                 }
                 continue;
-            }
-            if (c == '+') {
-                tokens.push_back(Token(string(1, c), 1, 'L',TokenType::OP));
-                continue;
-            }
-            ErrorHandler(ErrorCode::INVALID_EXPRESSION); 
-            break;
-            
+            } 
+
+        if (c == '+') {
+            tokens.push_back(Token(string(1, c), 1, 'L',TokenType::OP));
+            continue;
         }
+        ErrorHandler(ErrorCode::INVALID_EXPRESSION); 
+        break;
     }
-    return tokens;
+}
+
+return tokens;
 }
