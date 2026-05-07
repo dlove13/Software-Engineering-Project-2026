@@ -8,6 +8,7 @@
 #include <cctype>
 #include <stack>
 #include <stdexcept>
+#include <cmath>
 using namespace std;
 
 //Display Functions
@@ -91,12 +92,16 @@ struct ParserResult
 ParserResult Parser( vector<Token> tokenizedInput); 
 
 
-/*  Could probably mirror the ParserResult struct and create an
- *  Evaluator struct to hold the result and error code
- *
- * */
-
 //int Evalutor();             //TODO
+
+//Store result of evaluator and potential error code
+struct EvaluatorResult
+{
+   double result = 0.0;
+   ErrorCode error = ErrorCode::NONE;
+};
+
+EvaluatorResult Evaluator(ParserResult parserOutput);
 
 void Unit_Tests();            //TODO
 
