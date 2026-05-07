@@ -14,6 +14,7 @@ using namespace std;
 //Display Functions
 void Display();
 void Display_Menu();
+void Display_AEE();
 char userMenuChoice();   //TODO: Check for valid input
 void clear();
 
@@ -35,7 +36,7 @@ enum class ErrorCode
 void ErrorHandler(ErrorCode error);
 
 
-//Define token class
+//Define token struct
 class Token {
         
     public:
@@ -43,7 +44,7 @@ class Token {
         int precedence;
         char associativity;
         TokenType type;
-        
+
         //== overload to check if two tokens are equal
         bool operator==(const Token& other) const
         {
@@ -80,7 +81,14 @@ class Token {
         }
 };
 
-vector<Token> Tokenizer(string input);   //TODO
+//Store result of tokenizer and potential error code
+struct TokenizerResult
+{
+    vector<Token> tokens;
+    ErrorCode error = ErrorCode::NONE;
+};
+
+TokenizerResult Tokenizer(string input);
 
 //Store result of parser and potential error code
 struct ParserResult
@@ -89,10 +97,9 @@ struct ParserResult
     ErrorCode error = ErrorCode::NONE;
 };
 
+
 ParserResult Parser( vector<Token> tokenizedInput); 
 
-
-//int Evalutor();             //TODO
 
 //Store result of evaluator and potential error code
 struct EvaluatorResult
