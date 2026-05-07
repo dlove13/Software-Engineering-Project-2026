@@ -1,5 +1,5 @@
 #include "function.h" 
-vector<Token> Tokenizer (string input) {
+TokenizerResult Tokenizer (string input) {
 
     vector<Token> tokens; // stires tokens via vector
 
@@ -17,9 +17,9 @@ vector<Token> Tokenizer (string input) {
 
                     if (input[i] == '.') {
                         if (doubledot) {
-                            ErrorHandler(ErrorCode::INVALID_SYNTAX); 
-                            break;
+                            return {{}, ErrorCode::INVALID_SYNTAX}; 
                         }
+
                         doubledot = true;
                     }
 
@@ -72,8 +72,7 @@ vector<Token> Tokenizer (string input) {
                         while (i < input.size() && (isdigit(input[i]) || input[i] == '.')) {
                             if (input[i] == '.') {
                                 if (doubledot) {
-                                    ErrorHandler(ErrorCode::INVALID_SYNTAX);
-                                    break;
+                                   return {{}, ErrorCode::INVALID_SYNTAX}; 
                                 }
                                 doubledot = true;
                             }
@@ -84,8 +83,8 @@ vector<Token> Tokenizer (string input) {
                         tokens.push_back(Token(numStr)); // e.g. "-3.14" as a NUM token
                     } else {
                         // '-' was not followed by a number — invalid
-                        ErrorHandler(ErrorCode::INVALID_SYNTAX);
-                        break;
+                        return {{}, ErrorCode::INVALID_SYNTAX};
+                        
                     }
                 } else {
                     tokens.push_back(Token(string(1, c), 1, 'L', TokenType::OP));
@@ -97,10 +96,9 @@ vector<Token> Tokenizer (string input) {
             tokens.push_back(Token(string(1, c), 1, 'L',TokenType::OP));
             continue;
         }
-        ErrorHandler(ErrorCode::INVALID_EXPRESSION); 
-        break;
+        return {{}, ErrorCode::INVALID_SYNTAX}; 
     }
 }
 
-return tokens;
+return {tokens, ErrorCode::NONE};
 }

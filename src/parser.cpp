@@ -30,6 +30,11 @@ ParserResult Parser (vector<Token> tokenizedInput) {
     for (size_t i = 0; i < tokenizedInput.size(); i++)
 
     {
+        //Check if input is empty
+        if (tokenizedInput.empty())
+        {
+            return {{}, ErrorCode::INVALID_EXPRESSION};
+        }
         //Check if number, then push to output
         if (tokenizedInput.at(i).type == TokenType::NUM) 
         {
@@ -39,7 +44,7 @@ ParserResult Parser (vector<Token> tokenizedInput) {
         else if (tokenizedInput.at(i).type == TokenType::LPAREN)
         {
             //Check if there is an operator after an opening parenthesis
-            if (tokenizedInput.at(i + 1).type == TokenType::OP)
+            if (i + 1 < tokenizedInput.size() && tokenizedInput.at(i + 1).type == TokenType::OP)
             {
                 return {{}, ErrorCode::INVALID_SYNTAX};
             }
@@ -54,6 +59,13 @@ ParserResult Parser (vector<Token> tokenizedInput) {
             {
                 return {{}, ErrorCode::INVALID_SYNTAX};
             }
+
+            //Check if there is empty parenthesis
+            if (i > 0 && tokenizedInput.at(i - 1).type == TokenType::LPAREN)
+            {
+                return {{}, ErrorCode::INVALID_SYNTAX};
+            }
+
             while (!operatorStack.empty() && operatorStack.top().type != TokenType:: LPAREN)
             {
                 postFixExpr.push_back(operatorStack.top());
