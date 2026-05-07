@@ -92,17 +92,12 @@ struct ParserResult
 ParserResult Parser( vector<Token> tokenizedInput); 
 
 
-/*  Could probably mirror the ParserResult struct and create an
- *  Evaluator struct to hold the result and error code
- *
- * */
-
 //int Evalutor();             //TODO
 
 //Store result of evaluator and potential error code
 struct EvaluatorResult
 {
-   double output = 0.0;
+   double result = 0.0;
    ErrorCode error = ErrorCode::NONE;
 };
 
