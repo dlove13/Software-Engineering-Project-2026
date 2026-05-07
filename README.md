@@ -112,7 +112,7 @@ You will be presented with a menu:
  
 - **Option 1** – Enter and evaluate an arithmetic expression
 - **Option 2** – Run unit tests
-- **Any non-digit** – Exit the program
+- **Option 0** – Exit the program
 ### Example Expressions
  
 ```
